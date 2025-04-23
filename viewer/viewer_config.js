@@ -1,10 +1,10 @@
 const viewerConfig = {
   planetPreviewSources: {
-    nauvis: "https://dl.dropboxusercontent.com/scl/fi/mz5dvcpr3xv0y8sfv4elq/nauvis.png?rlkey=v3itw7kbcl867at3ghvhs47sz",
-    vulcanus: "https://dl.dropboxusercontent.com/scl/fi/0w0417an9g5lj9xk4omse/vulcanus.png?rlkey=fvnwi30ncl43hurqb1xiriebp",
-    gleba: "https://dl.dropboxusercontent.com/scl/fi/3lrjfxppvyrrzr7j2u9q2/gleba.png?rlkey=lmnaw03onzt4ffmb4vp5eriqx",
-    fulgora: "https://dl.dropboxusercontent.com/scl/fi/dvul6dwucyn219hj52gco/fulgora.png?rlkey=waik7wtx30b26o19m9twp5e2e",
-    aquilo: "https://dl.dropboxusercontent.com/scl/fi/yomn9389zch04m138ru29/aquilo.png?rlkey=yxg9qpocmk7hvmbvk5zkc9su3",
+    nauvis: "https://dl.dropboxusercontent.com/scl/fi/huherqqyj03sigzgxsy3j/nauvis.png?rlkey=jdokw6ikwp5gwtw0gvch12lyx",
+    vulcanus: "https://dl.dropboxusercontent.com/scl/fi/j31m0z30wiby7ldv22nay/vulcanus.png?rlkey=dhsq1ht7ssemwjhb2u5xrctvb",
+    gleba: "https://dl.dropboxusercontent.com/scl/fi/2o24u077yu0ny9ax7c385/gleba.png?rlkey=wd8mpwo6yubsyotjr846qb3ne",
+    fulgora: "https://dl.dropboxusercontent.com/scl/fi/l8dhxwh5fpnl0lt2uxh9n/fulgora.png?rlkey=y847lg8yn60wsi5zvt9evswcg",
+    aquilo: "https://dl.dropboxusercontent.com/scl/fi/pscgjcldszj6kvr3motqa/aquilo.png?rlkey=yo8itikkt4lo7qt73mw33636o",
   },
-  planetNamesSource: "https://dl.dropboxusercontent.com/scl/fi/5pz21mqp8743ktey5uzc8/planet_names.json?rlkey=pcbl3qhflnnkzvhvvalvo6o3m"
+  planetNamesSource: "https://dl.dropboxusercontent.com/scl/fi/w6mzyvrvkst3pfxtyxzdo/remote_planet_names.json?rlkey=izovfhvgnwsv8zn5l44n8i776"
 };
