@@ -1,4 +1,5 @@
 import json
+from datetime import datetime, timezone
 from pathlib import Path
 
 from src.FactorioPreviewToolkit.preview_generator.factorio_interface import run_factorio_command
@@ -47,17 +48,26 @@ def _load_supported_planets(path: Path) -> list[str]:
 def write_planet_names_list_to_output(planets: list[str]) -> None:
     """
     Writes the list of supported planets in both JSON and JS format to the preview output directory.
+    Adds a UTC '' field to the JSON file to ensure Dropbox sees the file as updated.
     """
+    # Wrap with metadata for the JSON version
+    json_payload = {"planets": planets, "time": datetime.now(timezone.utc).isoformat()}
+
     # Write JSON version
     with constants.PLANET_NAMES_REMOTE_VIEWER_FILEPATH.open("w", encoding="utf-8") as f:
-        json.dump(planets, f, indent=2)
+        json.dump(json_payload, f, indent=2)
     log.info(f"📋 Planet list written to JSON: {constants.PLANET_NAMES_REMOTE_VIEWER_FILEPATH}")
 
-    # Write JS version
+    # Write JS version (list + upload time)
     with constants.PLANET_NAMES_LOCAL_VIEWER_FILEPATH.open("w", encoding="utf-8") as f:
         f.write("const planetNames = ")
         json.dump(planets, f, indent=2)
         f.write(";\n")
+
+        f.write("const planetNamesUploadTime = ")
+        f.write(json.dumps(json_payload["time"]))
+        f.write(";\n")
+
     log.info(f"📄 Planet list written to JS: {constants.PLANET_NAMES_LOCAL_VIEWER_FILEPATH}")
 
 

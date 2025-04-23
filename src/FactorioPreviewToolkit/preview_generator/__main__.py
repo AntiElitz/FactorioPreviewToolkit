@@ -18,6 +18,7 @@ from src.FactorioPreviewToolkit.preview_generator.preview_generation import (
 from src.FactorioPreviewToolkit.preview_generator.preview_generation_setup import (
     run_preview_setup_pipeline,
 )
+from src.FactorioPreviewToolkit.shared.error_popup import show_error_popup
 from src.FactorioPreviewToolkit.shared.structured_logger import log, log_section
 from src.FactorioPreviewToolkit.shared.utils import is_valid_map_string
 
@@ -78,8 +79,9 @@ def main(argv: Sequence[str] | None = None) -> None:
             run_preview_setup_pipeline(arguments.factorio_path, arguments.map_string)
             run_full_preview_generation(arguments.factorio_path)
             log.info("✅ Preview Generator completed successfully.")
-    except Exception:
+    except Exception as e:
         log.exception("❌ Preview Generator failed with an exception.")
+        show_error_popup("Factorio Toolkit Error", str(e))
         raise
     finally:
         log.info("👋 Preview Generator exited.")

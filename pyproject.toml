@@ -8,6 +8,7 @@ authors = [
 readme = "README.md"
 requires-python = ">=3.10"
 dependencies = [
+    "pillow==11.2.1",
     "psutil==7.0.0",
     "pydantic==2.11.3",
     "pydantic_core==2.33.1",

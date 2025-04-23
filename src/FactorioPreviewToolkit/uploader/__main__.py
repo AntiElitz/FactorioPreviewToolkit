@@ -1,3 +1,4 @@
+from src.FactorioPreviewToolkit.shared.error_popup import show_error_popup
 from src.FactorioPreviewToolkit.shared.structured_logger import log, log_section
 from src.FactorioPreviewToolkit.uploader.factory import get_uploader
 
@@ -12,8 +13,9 @@ def main() -> None:
             uploader = get_uploader()
             uploader.upload_all()
             log.info("✅ Uploader finished successfully.")
-    except Exception:
+    except Exception as e:
         log.exception("❌ Uploader failed with an exception.")
+        show_error_popup("Factorio Toolkit Error", str(e))
         raise
     finally:
         log.info("👋 Uploader exited.")

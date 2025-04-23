@@ -24,15 +24,16 @@ function loadPlanetNamesFromScript(src) {
       document.head.appendChild(script);
     });
   } else {
-    // Load as JSON
     return fetch(src)
       .then((res) => {
-        if (!res.ok) throw new Error("Network response was not ok");
+        if (!res.ok) throw new Error(`Failed to fetch JSON (${res.status})`);
         return res.json();
       })
       .then((data) => {
-        if (!Array.isArray(data)) throw new Error("Invalid planetNames format in JSON");
-        return data;
+        if (!Array.isArray(data.planets)) {
+          throw new Error("Invalid JSON format: expected a 'planets' array.");
+        }
+        return data.planets;
       });
   }
 }

@@ -45,7 +45,7 @@ if __name__ == "__main__":
         log.info("⚠️ Interrupted by user. Shutting down...")
     except Exception as e:
         log.exception("❌ Unhandled exception occurred.")
-        show_error_popup("Factorio Toolkit Error", str(e))  # ← friendly UI for users
+        show_error_popup("Factorio Toolkit Error", str(e))
         raise
     finally:
         if controller is not None:
