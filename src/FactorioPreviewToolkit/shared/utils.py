@@ -1,9 +1,8 @@
-import json
 import platform
 import re
 import sys
 from pathlib import Path
-from typing import Literal, Any
+from typing import Literal
 
 
 def is_valid_map_string(s: str) -> bool:
@@ -79,30 +78,3 @@ def get_supported_architecture() -> Literal["intel_amd64", "arm64", "unsupported
     if arch_raw in ("arm64", "aarch64"):
         return "arm64"
     return "unsupported"
-
-
-def write_js_variable(filepath: Path, variable_name: str, value: Any) -> None:
-    """
-    Writes a JS file with a single variable assignment.
-    Example output: const variable_name = <json-encoded value>;
-    """
-    with filepath.open("w", encoding="utf-8") as f:
-        f.write(f"const {variable_name} = ")
-        json.dump(value, f, indent=2)
-        f.write(";\n")
-
-
-def read_js_variable(filepath: Path, variable_name: str) -> Any:
-    """
-    Reads a JS file that declares a variable and returns its value.
-    Expects format: const <variable_name> = <value>;
-    """
-    prefix = f"const {variable_name} = "
-    with filepath.open("r", encoding="utf-8") as f:
-        content = f.read().strip()
-        if not content.startswith(prefix):
-            raise ValueError(f"JS file does not start with expected prefix: {prefix}")
-        json_part = content[len(prefix) :]
-        if json_part.endswith(";"):
-            json_part = json_part[:-1]
-        return json.loads(json_part)

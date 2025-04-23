@@ -5,7 +5,6 @@ from src.FactorioPreviewToolkit.preview_generator.factorio_interface import run_
 from src.FactorioPreviewToolkit.shared.config import Config
 from src.FactorioPreviewToolkit.shared.shared_constants import constants
 from src.FactorioPreviewToolkit.shared.structured_logger import log, log_section
-from src.FactorioPreviewToolkit.shared.utils import write_js_variable
 
 
 def _log_seed_from_map_gen_settings(settings_path: Path) -> int:
@@ -47,11 +46,19 @@ def _load_supported_planets(path: Path) -> list[str]:
 
 def write_planet_names_list_to_output(planets: list[str]) -> None:
     """
-    Writes the list of supported planets as a JS file to the preview output directory.
+    Writes the list of supported planets in both JSON and JS format to the preview output directory.
     """
-    output_file = constants.PLANET_NAMES_VIEWER_FILEPATH
-    write_js_variable(output_file, "planetNames", planets)
-    log.info(f"📋 Planet list written to: {output_file}")
+    # Write JSON version
+    with constants.PLANET_NAMES_REMOTE_VIEWER_FILEPATH.open("w", encoding="utf-8") as f:
+        json.dump(planets, f, indent=2)
+    log.info(f"📋 Planet list written to JSON: {constants.PLANET_NAMES_REMOTE_VIEWER_FILEPATH}")
+
+    # Write JS version
+    with constants.PLANET_NAMES_LOCAL_VIEWER_FILEPATH.open("w", encoding="utf-8") as f:
+        f.write("const planetNames = ")
+        json.dump(planets, f, indent=2)
+        f.write(";\n")
+    log.info(f"📄 Planet list written to JS: {constants.PLANET_NAMES_LOCAL_VIEWER_FILEPATH}")
 
 
 def generate_all_planet_previews(

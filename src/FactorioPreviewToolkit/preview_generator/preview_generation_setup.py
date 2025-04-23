@@ -101,7 +101,7 @@ def _inject_preview_setup_script(exchange_string: str) -> None:
         injected_script = _build_control_lua(
             exchange_string,
             constants.COMBINED_MAP_GEN_SETTINGS_FILENAME,
-            constants.PLANET_NAMES_GENERATION_FILENAME,
+            constants.PLANET_NAMES_REMOTE_FILENAME,
         )
 
         control_lua.write_text(

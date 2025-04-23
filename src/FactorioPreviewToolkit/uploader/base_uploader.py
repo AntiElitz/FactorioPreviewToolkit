@@ -1,10 +1,8 @@
 from abc import ABC, abstractmethod
 from pathlib import Path
-from typing import cast
 
 from src.FactorioPreviewToolkit.shared.shared_constants import constants
 from src.FactorioPreviewToolkit.shared.structured_logger import log, log_section
-from src.FactorioPreviewToolkit.shared.utils import read_js_variable
 
 
 def write_viewer_config_js(planet_image_links: dict[str, str], planet_names_link: str) -> None:
@@ -31,18 +29,23 @@ def write_viewer_config_js(planet_image_links: dict[str, str], planet_names_link
             raise
 
 
+import json
+from typing import cast
+
+
 def _load_planet_names() -> list[str]:
     """
-    Loads the list of planet names from the JS file generated during preview setup.
+    Loads the list of planet names from the JSON file generated during preview setup.
     """
-    planet_file = constants.PLANET_NAMES_VIEWER_FILEPATH
+    planet_file = constants.PLANET_NAMES_LOCAL_VIEWER_FILEPATH
     with log_section("📄 Loading planet names..."):
         try:
-            planets = cast(list[str], read_js_variable(planet_file, "planetNames"))
+            with planet_file.open("r", encoding="utf-8") as f:
+                planets = json.load(f)
             log.info(f"✅ Loaded {len(planets)} planets: {', '.join(planets)}")
-            return planets
+            return cast(list[str], planets)
         except Exception:
-            log.error("❌ Failed to load or parse planet names JS file.")
+            log.error("❌ Failed to load or parse planet names JSON file.")
             raise
 
 
@@ -71,8 +74,8 @@ class BaseUploader(ABC):
         with log_section("📤 Uploading planet names file..."):
             try:
                 url = self.upload_single(
-                    constants.PLANET_NAMES_VIEWER_FILEPATH,
-                    constants.PLANET_NAMES_GENERATION_FILENAME,
+                    constants.PLANET_NAMES_REMOTE_VIEWER_FILEPATH,
+                    constants.PLANET_NAMES_REMOTE_FILENAME,
                 )
                 log.info("✅ Planet names uploaded.")
                 return url
