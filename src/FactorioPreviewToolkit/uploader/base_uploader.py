@@ -37,7 +37,7 @@ def _load_planet_names() -> list[str]:
     """
     Loads the list of planet names from the JSON file generated during preview setup.
     """
-    planet_file = constants.PLANET_NAMES_LOCAL_VIEWER_FILEPATH
+    planet_file = constants.PLANET_NAMES_REMOTE_VIEWER_FILEPATH
     with log_section("📄 Loading planet names..."):
         try:
             with planet_file.open("r", encoding="utf-8") as f:
