@@ -24,6 +24,7 @@ function loadPlanetNamesFromScript(src) {
       document.head.appendChild(script);
     });
   } else {
+    // Load as JSON
     return fetch(src)
       .then((res) => {
         if (!res.ok) throw new Error(`Failed to fetch JSON (${res.status})`);

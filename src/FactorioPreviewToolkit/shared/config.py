@@ -43,7 +43,6 @@ class Config:
             parser.read(config_path)
 
             data = cls._flatten_sections(parser)
-            data = cls._normalize_data(data)
 
             try:
                 cls._instance = Settings.model_validate(data)
@@ -65,16 +64,4 @@ class Config:
         data.update(flat("settings"))
         data.update(flat("map_exchange_input"))
         data.update(flat("upload"))
-        return data
-
-    @staticmethod
-    def _normalize_data(data: dict[str, Union[str, list[str]]]) -> dict[str, Union[str, list[str]]]:
-        """
-        Applies normalization to specific fields (e.g., string → list conversion).
-        """
-        raw = data.get("planet_names", "")
-        if isinstance(raw, str):
-            data["planet_names"] = [
-                x.strip(" '\"") for x in raw.strip("[]").split(",") if x.strip()
-            ]
         return data

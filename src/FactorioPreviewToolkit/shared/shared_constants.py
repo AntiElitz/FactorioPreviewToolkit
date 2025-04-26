@@ -1,7 +1,7 @@
 import textwrap
 from pathlib import Path
 
-from src.FactorioPreviewToolkit.shared.utils import get_project_root
+from src.FactorioPreviewToolkit.shared.utils import get_project_root, detect_os
 
 
 class _Constants:
@@ -58,11 +58,15 @@ class _Constants:
         config_path = self.BASE_TEMP_DIR / self.FACTORIO_CONFIG_FILENAME
         if not config_path.exists():
             with log_section(f"❌ Factorio config not found at {config_path}. Creating it..."):
+                if detect_os() == "mac":
+                    read_data = "__PATH__executable__/../data"
+                else:
+                    read_data = "__PATH__executable__/../../data"
                 config_content = textwrap.dedent(
                     f"""
                     ; version=12
                     [path]
-                    read-data=__PATH__executable__/../../data
+                    read-data={read_data}
                     write-data={self.FACTORIO_WRITE_DATA_DIR}
                     """
                 )

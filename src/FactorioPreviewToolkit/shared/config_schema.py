@@ -54,7 +54,6 @@ class Settings(BaseModel):
 
     # === Preview Generation ===
     map_preview_size: int
-    planet_names: list[str]
 
     # === Sound Settings ===
     sound_start_filepath: Path
@@ -300,18 +299,6 @@ class Settings(BaseModel):
             raise ValueError(
                 f"The Factorio executable specified does not exist:\n  {v}\n"
                 f"Check your 'fixed_path_factorio_executable' setting."
-            )
-        return v
-
-    @field_validator("planet_names")
-    def planets_cannot_be_empty(cls, v: list[str]) -> list[str]:
-        """
-        Validates that the list of planets is not empty.
-        """
-        if not v:
-            raise ValueError(
-                "The list 'planet_names' cannot be empty. "
-                "Please specify at least one planet for preview generation."
             )
         return v
 

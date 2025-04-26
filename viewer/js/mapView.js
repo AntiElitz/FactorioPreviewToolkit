@@ -14,14 +14,33 @@ function setupTabs(previewSources, tabContainer, mapImage) {
     if (index === 0) {
       tab.classList.add("active");
       currentPlanet = planet;
+
+      // Set up fallback message
+      const fallback = document.createElement("div");
+      fallback.textContent = "🚫 No preview available yet for this planet.";
+      fallback.style.cssText = "color: white; padding: 1em; text-align: center;";
+      fallback.style.display = "none";
+      mapImage.parentElement.appendChild(fallback);
+
+      mapImage.onerror = () => {
+        console.error("Failed to load map image:", mapImage.src);
+        mapImage.style.display = "none";
+        fallback.style.display = "block";
+      };
+
+      mapImage.onload = () => {
+        mapImage.style.display = "block";
+        fallback.style.display = "none";
+      };
+
       mapImage.src = url;
-      mapImage.onerror = () => console.error("Failed to load map image:", mapImage.src);
     }
 
     tab.addEventListener("click", () => switchPlanet(planet, previewSources, mapImage));
     tabContainer.appendChild(tab);
   });
 }
+
 
 function switchPlanet(planet, previewSources, mapImage) {
   if (currentPlanet) {

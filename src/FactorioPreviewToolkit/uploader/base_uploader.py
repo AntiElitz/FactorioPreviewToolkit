@@ -5,6 +5,7 @@ from pathlib import Path
 from typing import cast
 
 from PIL import PngImagePlugin, Image
+from PIL.Image import ADAPTIVE
 
 from src.FactorioPreviewToolkit.shared.shared_constants import constants
 from src.FactorioPreviewToolkit.shared.structured_logger import log, log_section
@@ -75,6 +76,16 @@ def _add_upload_timestamp_to_png(path: Path) -> None:
     image.save(path, "PNG", pnginfo=metadata)
 
 
+def _optimize_png(path: Path) -> None:
+    """
+    Re-encodes a PNG image with maximum lossless compression.
+    """
+    with Image.open(path) as img:
+        if img.mode != "P":
+            img = img.convert("P", palette=ADAPTIVE, colors=256)
+        img.save(path, optimize=True, compress_level=9)
+
+
 class BaseUploader(ABC):
     """
     Abstract uploader class. Uploads the planet names file and all planet preview images.
@@ -122,6 +133,7 @@ class BaseUploader(ABC):
             with log_section(f"🌍 Uploading {planet} preview..."):
                 image_path = constants.PREVIEWS_OUTPUT_DIR / f"{planet}.png"
                 try:
+                    _optimize_png(image_path)
                     _add_upload_timestamp_to_png(image_path)
                     url = self.upload_single(image_path, f"{planet}.png")
                     links[planet] = url

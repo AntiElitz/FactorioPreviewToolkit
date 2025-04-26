@@ -6,23 +6,24 @@
 temp_files/
 
 # Map preview images and links (output)
-previews/
-output_links.txt
+previews/*
+!previews/local_planet_names.js
 
 # Logs
 logs/
 
-# Viewer config and build artifacts
-viewer/viewer-config.js
+# Ignore most of the build and dist folders, except for build scripts
+toolkit_build/__pyinstaller__/
+toolkit_build/dist/
+
 dist/
-build/
 *.spec
 
 # Compiled/minified frontend assets
 *.min.js
 *.min.css
 
-# Ignore all of third_party, but keep .gitkeep files
+# Ignore all of third_party, but keep rclone binaries
 third_party/*
 !third_party/rclone
 
@@ -51,8 +52,6 @@ ENV/
 *.egg-info/
 .eggs/
 develop-eggs/
-build/
-dist/
 downloads/
 sdist/
 wheels/
