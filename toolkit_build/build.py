@@ -60,7 +60,7 @@ def run_pyinstaller(version: str) -> None:
             "pyinstaller",
             "--onefile",
             "--name",
-            f"{EXECUTABLE_NAME}-v{version}",
+            EXECUTABLE_NAME,
             "--distpath",
             str(DIST_DIR),
             "--workpath",

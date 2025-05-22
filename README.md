@@ -28,9 +28,8 @@ You can find the latest prebuilt release on the [GitHub Releases page](https://g
 
 ### 2. 🟢 Start the Toolkit
 Run the provided `factorio-preview-toolkit` executable (just double-click it or start it from a terminal window).
-- By default on first launch, it will prompt you to **authorize Dropbox**, so previews can be automatically uploaded and shared with your audience. (See the [🌍 Host the Viewer for Your Audience](#🌍-host-the-viewer-for-your-audience) section.)
 - It will now automatically detect Your **currently active Factorio instance** and trigger on Any **map exchange strings** copied to your clipboard
->  ⚠️ Don't want automatic uploads or clipboard monitoring? You can fully customize this in the `config.ini` file. (See the config section below.)
+>  ⚠️ Don't want automatic clipboard monitoring or instance localization? You can fully customize this in the `config.ini` file. (See the config section below.)
 
 ### 3. 🪟 Open the Map Viewer
 Open the included `factorio-preview-viewer.html` file in your browser. This local interface lets you explore your map previews easily.
@@ -60,7 +59,16 @@ Once the preview images are ready:
 You can host your own copy of the **Factorio Map Viewer** to share your map with others.  
 Here’s how to do it using **GitHub Pages**:
 
-### ✅ Step 1: Fork This Repository
+### ✅ Step 1: Update the config.ini File
+First, you must update the configuration file to choose your preferred upload method.
+1. Open `config.ini` in the root of the project.
+2. Find the following line:
+`upload_method = skip`
+3. Update it to one of the following:
+- rclone (recommended) – Uploads the previews directly to a remote service (e.g., Dropbox) using the bundled rclone. The toolkit handles the upload automatically.
+- local_sync – Only copies the previews to a local folder (e.g., OneDrive). You are responsible for setting up your own sync software to handle the actual cloud upload.
+
+### ✅ Step 2: Fork This Repository
 Make sure you’re logged in at [github.com](https://github.com).
 - Visit **[https://github.com/AntiElitz/FactorioPreviewToolkit](https://github.com/AntiElitz/FactorioPreviewToolkit)**
 - In the top-right corner, click **“Fork”**
@@ -68,19 +76,22 @@ Make sure you’re logged in at [github.com](https://github.com).
 ➡️ You now have your own copy of the toolkit!
 
 
-### ✏️ Step 2: Update the Online Remote Viewer Config
-> ⚠️ If you later **add new planets**, **delete uploaded files**, or if **Dropbox unexpectedly changes links**, you will need to **repeat this process**:  
+### ✏️ Step 3: Update the Online Remote Viewer Config
+> ⚠️ If you later **add new planets**, **delete uploaded files**, or if **Dropbox unexpectedly changes links**, you will need to **repeat this step**:  
 
 🔵 **(Recommended) If you uploaded using `upload_method = rclone`:**
 
 When using `upload_method = rclone`, the viewer_config.js content will be generated automatically:
 1. **Run the Toolkit locally** with all your planets enabled
-2. This will generate a file at: `FactorioPreviewToolkit/previews/remote_viewer_config.txt` <br>
+2. By default, on first launch, it will prompt you to **authorize Dropbox**
+> ⚠️ Authentication failed? Configure rclone manually: <br>
+> Open a terminal, navigate to third_party/rclone/&lt;platform&gt;/&lt;architecture&gt;/, and run `rclone config`.
+4. This will generate a file at: `FactorioPreviewToolkit/previews/remote_viewer_config.txt` <br>
 It contains permanent links to your uploaded preview files
-3. In your **forked repository**, go to: `./viewer/viewer_config.js`
-4. Click the ✏️ edit icon on GitHub
-5. Replace the **entire file** with the contents of `remote_viewer_config.txt`
-6. Commit the changes
+4. In your **forked repository**, go to: `./viewer/viewer_config.js`
+5. Click the ✏️ edit icon on GitHub
+6. Replace the **entire file** with the contents of `remote_viewer_config.txt`
+7. Commit the changes
 
 🟠 **If you upload with `upload_method = local_sync` or manually (Dropbox Desktop, etc.)**
 
@@ -102,7 +113,7 @@ When using another method, the viewer_config.js content has to be configured man
 6. Commit the changes
 
 
-### 🛠️ Step 3: Enable GitHub Pages
+### 🛠️ Step 4: Enable GitHub Pages
 - Go to your new **forked repository**
 - Click the **“Settings”** tab in the middle (not the settings for your profile)
 - In the left sidebar, scroll down and click **“Pages”**

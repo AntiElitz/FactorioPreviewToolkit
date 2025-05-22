@@ -1,7 +1,4 @@
-import textwrap
-from pathlib import Path
-
-from src.FactorioPreviewToolkit.shared.utils import get_project_root, detect_os
+from src.FactorioPreviewToolkit.shared.utils import get_project_root
 
 
 class _Constants:
@@ -13,7 +10,6 @@ class _Constants:
     # === Project & Config ===
     BASE_PROJECT_DIR = get_project_root()
     PREVIEW_TOOLKIT_CONFIG_FILEPATH = BASE_PROJECT_DIR / "config.ini"
-    FACTORIO_CONFIG_FILENAME = "factorio_config.ini"
 
     # === Logging & Assets ===
     LOGS_DIR = BASE_PROJECT_DIR / "logs"
@@ -41,39 +37,13 @@ class _Constants:
     PLANET_NAMES_GENERATION_FILEPATH = SCRIPT_OUTPUT_DIR / PLANET_NAMES_REMOTE_FILENAME
     PLANET_NAMES_REMOTE_VIEWER_FILEPATH = PREVIEWS_OUTPUT_DIR / PLANET_NAMES_REMOTE_FILENAME
     PLANET_NAMES_LOCAL_VIEWER_FILEPATH = PREVIEWS_OUTPUT_DIR / PLANET_NAMES_LOCAL_FILENAME
+    FACTORIO_CONFIG_FILEPATH = BASE_TEMP_DIR / "factorio_config.ini"
     FACTORIO_LOCK_FILEPATH = FACTORIO_WRITE_DATA_DIR / ".lock"
 
     # === Ensure required directories exist ===
     BASE_TEMP_DIR.mkdir(parents=True, exist_ok=True)
     LOGS_DIR.mkdir(parents=True, exist_ok=True)
     PREVIEWS_OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
-
-    @property
-    def FACTORIO_CONFIG_PATH(self) -> Path:
-        """
-        Lazily initializes the Factorio config file path. If the file doesn't exist, it creates it with default content.
-        """
-        from src.FactorioPreviewToolkit.shared.structured_logger import log_section, log
-
-        config_path = self.BASE_TEMP_DIR / self.FACTORIO_CONFIG_FILENAME
-        if not config_path.exists():
-            with log_section(f"❌ Factorio config not found at {config_path}. Creating it..."):
-                if detect_os() == "mac":
-                    read_data = "__PATH__executable__/../data"
-                else:
-                    read_data = "__PATH__executable__/../../data"
-                config_content = textwrap.dedent(
-                    f"""
-                    ; version=12
-                    [path]
-                    read-data={read_data}
-                    write-data={self.FACTORIO_WRITE_DATA_DIR}
-                    """
-                )
-                with open(config_path, "w") as config_file:
-                    config_file.write(config_content)
-                log.info("✅ Factorio config created.")
-        return config_path
 
 
 constants = _Constants()

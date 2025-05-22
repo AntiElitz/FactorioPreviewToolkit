@@ -50,7 +50,7 @@ def get_script_base() -> Path:
     return Path(__file__).resolve().parents[2]
 
 
-def detect_os() -> Literal["windows", "linux", "mac"]:
+def detect_os() -> Literal["windows", "linux", "macOS"]:
     """
     Detects and returns the current OS name used in bundled rclone folder names.
     Raises an exception if the OS is unsupported.
@@ -62,7 +62,7 @@ def detect_os() -> Literal["windows", "linux", "mac"]:
         case "linux":
             return "linux"
         case "darwin":
-            return "mac"
+            return "macOS"
         case _:
             raise RuntimeError(f"❌ Unsupported OS {os_name}")
 

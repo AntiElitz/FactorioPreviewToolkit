@@ -93,7 +93,7 @@ class Settings(BaseModel):
         path = values.get("fixed_path_factorio_executable")
         if (
             path
-            and detect_os() == "mac"
+            and detect_os() == "macOS"
             and isinstance(path, (str, Path))
             and str(path).endswith(".app")
             and "factorio" in str(path).lower()

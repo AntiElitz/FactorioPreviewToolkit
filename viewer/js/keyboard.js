@@ -24,19 +24,18 @@ function initKeyboardControls(mapImage, mapContainer, zoomDisplay) {
     isDragging = true;
     startX = e.clientX - offsetX;
     startY = e.clientY - offsetY;
-    mapImage.style.cursor = "grabbing";
+    mapContainer.style.cursor = "grabbing";
   });
 
   window.addEventListener("mouseup", () => {
     isDragging = false;
-    mapImage.style.cursor = "grab";
+    mapContainer.style.cursor = "grab";
   });
 
   window.addEventListener("mousemove", e => {
     if (!isDragging) return;
     offsetX = e.clientX - startX;
     offsetY = e.clientY - startY;
-    clampOffsets(mapImage, mapContainer);
     updateTransform(mapImage);
   });
 
@@ -73,7 +72,6 @@ function initKeyboardControls(mapImage, mapContainer, zoomDisplay) {
     }
 
     if (moved) {
-      clampOffsets(mapImage, mapContainer);
       updateTransform(mapImage);
     }
 

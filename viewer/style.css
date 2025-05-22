@@ -131,6 +131,8 @@ body {
   overflow: hidden;
   position: relative;
   margin: 4px;
+  background-color: black;
+  cursor: grab;
 }
 
 .map {
@@ -138,8 +140,9 @@ body {
   top: 0;
   left: 0;
   user-select: none;
-  cursor: grab;
-  transform-origin: top left;
   -webkit-user-drag: none;
   user-drag: none;
+  max-width: none;
+  max-height: none;
+  transform-origin: top left;
 }

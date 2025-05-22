@@ -7,6 +7,7 @@ from src.FactorioPreviewToolkit.factorio_path_provider.base import FactorioPathP
 from src.FactorioPreviewToolkit.factorio_path_provider.factory import get_factorio_path_provider
 from src.FactorioPreviewToolkit.map_string_provider.base import MapStringProvider
 from src.FactorioPreviewToolkit.map_string_provider.factory import get_map_string_provider
+from src.FactorioPreviewToolkit.shared.shared_constants import constants
 from src.FactorioPreviewToolkit.shared.structured_logger import log
 from src.FactorioPreviewToolkit.shared.structured_logger import log_section
 from src.FactorioPreviewToolkit.shared.utils import sanitize_map_string
@@ -96,6 +97,13 @@ class PreviewController:
         """
         Starts the PreviewController to process map strings and Factorio paths asynchronously.
         """
+
+        lock_file = constants.FACTORIO_LOCK_FILEPATH
+        try:
+            lock_file.unlink(missing_ok=True)
+        except Exception as e:
+            log.info(f"Could not delete lock file {lock_file}: {e}")
+            raise
 
         def on_new_map_string(map_string: str) -> None:
             self._event_queue.put(("map_string", map_string))

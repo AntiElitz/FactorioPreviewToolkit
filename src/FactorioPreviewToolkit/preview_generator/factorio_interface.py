@@ -2,12 +2,14 @@ import os
 import re
 import subprocess
 import sys
+import textwrap
 import time
 from pathlib import Path
 from typing import Any
 
 from src.FactorioPreviewToolkit.shared.shared_constants import constants
-from src.FactorioPreviewToolkit.shared.structured_logger import log
+from src.FactorioPreviewToolkit.shared.structured_logger import log, log_section
+from src.FactorioPreviewToolkit.shared.utils import detect_os
 
 
 def get_factorio_version(factorio_path: Path) -> tuple[int, int]:
@@ -89,11 +91,47 @@ def _get_priority_settings() -> dict[str, Any]:
     return {}
 
 
+def update_config_file(config_path: Path) -> None:
+    """
+    Updates the Factorio config file if the content has to change.
+    If the file doesn't exist, it will be created with the default content.
+    """
+    existing_content = ""
+    default_content = _generate_default_config_content()
+    if config_path.exists():
+        with open(config_path, "r") as config_file:
+            existing_content = config_file.read()
+    if existing_content != default_content:
+        with log_section(f"📄 Creating/Updating Factorio config at {config_path}..."):
+            with open(config_path, "w") as config_file:
+                config_file.write(default_content)
+            log.info("✅ Factorio config created/updated.")
+
+
+def _generate_default_config_content() -> str:
+    """
+    Generates the default content for the config file.
+    """
+    if detect_os() == "macOS":
+        read_data = "__PATH__executable__/../data"
+    else:
+        read_data = "__PATH__executable__/../../data"
+    return textwrap.dedent(
+        f"""
+        ; version=12
+        [path]
+        read-data={read_data}
+        write-data={constants.FACTORIO_WRITE_DATA_DIR}
+        """
+    )
+
+
 def run_factorio_command(factorio_executable_path: Path, args: list[str]) -> None:
     """
     Runs Factorio with the given args and config, with low-priority CPU settings.
     """
-    config_path = constants.FACTORIO_CONFIG_PATH
+    config_path = constants.FACTORIO_CONFIG_FILEPATH
+    update_config_file(config_path)
     log.info(f"⚙️ Using config file: {config_path}")
 
     try:
