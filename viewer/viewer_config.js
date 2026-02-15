@@ -6,5 +6,5 @@ const viewerConfig = {
     fulgora: "https://dl.dropboxusercontent.com/scl/fi/cod92hwmzmz566alu0wqj/fulgora.png?rlkey=kxq3fnviq4ag5ryatjzipgi3e",
     aquilo: "https://dl.dropboxusercontent.com/scl/fi/s6n4o4h7ix0fbnjtdg54e/aquilo.png?rlkey=5vfkbdox42ukq5fpobvxueckb",
   },
-  planetNamesSource: "https://dl.dropboxusercontent.com/scl/fi/y8kqe8h7rs01hgq99wak0/remote_planet_names.json?rlkey=pf1tvizqldodyljyjsjc8izzz"
+  planetNamesSource: "https://dl.dropboxusercontent.com/scl/fi/2ce1mnz9jrfrrxwmu0onb/remote_planet_names.json?rlkey=nryd0efjra30njzlz9e163wnx"
 };
