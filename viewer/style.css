@@ -146,3 +146,60 @@ body {
   max-height: none;
   transform-origin: top left;
 }
+
+/* Composite "Overview" layout: main planet (~2/3) + stacked side (~1/3). */
+.overview {
+  display: none; /* toggled to "grid" by the viewer when active */
+  grid-template-columns: 2fr 1fr;
+  gap: 4px;
+  width: calc(100vw - 8px);
+  height: calc(100vh - 50px);
+  margin: 4px;
+  background-color: black;
+  box-sizing: border-box;
+}
+
+.overview-side {
+  display: grid;
+  grid-template-rows: repeat(4, 1fr);
+  gap: 4px;
+  min-width: 0;
+  min-height: 0;
+}
+
+.overview-main,
+.overview-cell {
+  position: relative;
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+  background-color: black;
+  cursor: grab;
+}
+
+.overview-main img,
+.overview-cell img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  transform-origin: top left;
+  max-width: none;
+  max-height: none;
+  user-select: none;
+  -webkit-user-drag: none;
+  user-drag: none;
+}
+
+.overview-label {
+  position: absolute;
+  bottom: 6px;
+  left: 6px;
+  padding: 1px 5px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  color: var(--tab-text-active);
+  background-color: rgba(0, 0, 0, 0.45);
+  border-radius: 2px;
+  pointer-events: none;
+}
