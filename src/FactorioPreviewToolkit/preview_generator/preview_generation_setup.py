@@ -144,8 +144,7 @@ def _run_preview_setup_save(factorio_path: Path) -> None:
             [
                 "--benchmark",
                 str(save_folder),
-                "-ticks",
-                "1",
+                "--benchmark-ticks=1",
             ],
         )
         log.info("✅ Lua script executed and output files generated.")
