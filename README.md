@@ -9,6 +9,9 @@ multiple planets and want to share them easily with their community.
 - Auto-detects map exchange strings from clipboard or file  
 - Generates high-resolution PNG previews using the Factorio CLI  
 - Automatically uses the currently active Factorio instance
+- Supports planets added by mods (your mod folder is detected automatically)
+- Marks the spawn position (map center) with a red cross in the viewer
+- Composite overview of all planets at once, with a scrollable side column
 - Auto-upload to Dropbox or other rclone remotes  
 - A built-in offline & online map viewer with zoom support  
 
@@ -33,12 +36,16 @@ Run the provided `factorio-preview-toolkit` executable (just double-click it or 
 
 ### 3. 🪟 Open the Map Viewer
 Open the included `factorio-preview-viewer.html` file in your browser. This local interface lets you explore your map previews easily.
-- **Switch between planets** using the tab bar
+- **Switch between planets** using the tab bar, and page through it with **‹ ›** when a
+  modpack adds more planets than fit on one row
+- **Compare planets** in the **Overview** tab: one planet large, the rest in a scrollable
+  column beside it (it can auto-scroll for streaming, see `autoScrollSeconds`)
 - **Zoom in and out** with your mouse wheel
 - **Pan the map**:
   - Click and drag the image (left mouse button)
   - Or use **W/A/S/D** or **Arrow keys**
 - **Reset the view** with a double-click
+- The **red cross** marks map position `0, 0` - where you spawn
 
 ### 4. 🎲 Generate a Map
 In Factorio, go to the map generation screen and create a world as usual.
@@ -56,7 +63,13 @@ Once the preview images are ready:
 ---
 ## 🌍 Host the Viewer for Your Audience
 
-You can host your own copy of the **Factorio Map Viewer** to share your map with others.  
+You can host your own copy of the **Factorio Map Viewer** to share your map with others.
+
+> 💡 **Have web hosting?** Then use `upload_method = ftp` instead of everything below.
+> The toolkit uploads the previews *and* the viewer to the same folder, so
+> `ftp_public_base_url` is the whole setup - nothing to fork, nothing to copy by hand.
+> See the FTP section in `config.ini`.
+
 Here’s how to do it using **GitHub Pages**:
 
 ### ✅ Step 1: Update the config.ini File
@@ -145,6 +158,12 @@ Choose between:
 - **Automatic detection** – Based on the last focused Factorio window (default)
 - **Fixed path** – Manually set the full path to your Factorio executable
 
+### 🧩 Which mods are loaded  
+Previews of planets added by mods require those mods to be loaded:
+- **Automatic** – Uses the mod folder of the detected Factorio instance (default)
+- **Fixed path** – Point `factorio_mod_directory` at the folder containing `mod-list.json`
+- **none** – Load no mods at all (vanilla planets only, fastest)
+
 ### 🎲 How map exchange strings are received  
 Choose how new map seeds are fed into the tool:
 - **Clipboard monitoring** – Automatically detects when you copy a map string  
@@ -152,14 +171,22 @@ Choose how new map seeds are fed into the tool:
 
 ### 🖼️ How previews are generated  
 - Set the **output resolution** of your previews  
-- Pick the **planets** to render (e.g. Nauvis, Vulcanus...)  
+- Pick the **planets** to render via `planets`: `all` (default), `vanilla`, an explicit
+  list like `nauvis, gleba, muluna`, or exclusions like `all, !aquilo`.
+  Each planet costs a full Factorio startup (~45s with a large modpack), so limiting
+  this is the most effective way to speed up generation
 - Enable **sound feedback** for start/success/failure events
 
 ### ☁️ How the images are uploaded or shared  
 You can choose to:
 - **Skip uploading entirely** if you don’t want to host and share your previews with others
 - **Automatically upload** via Dropbox or other cloud providers using `rclone`
+- **Upload to your own web hosting over FTP**, which also puts the viewer itself next to
+  the images - so the folder's address is a working page, with no fork and no GitHub Pages
 - **Copy previews to a synced local folder** (e.g., OneDrive, Dropbox client)
+
+Uploading happens **while** the previews are generated, one planet at a time, so your
+audience sees each planet as soon as it is rendered instead of waiting for the whole run.
 
 ---
 ## 👩‍💻 Development

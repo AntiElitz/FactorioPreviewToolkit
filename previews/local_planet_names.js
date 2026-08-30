@@ -1,8 +1,6 @@
-const planetNames = [
+window.planetNames = [
   "nauvis",
-  "vulcanus",
-  "gleba",
-  "fulgora",
-  "aquilo"
+  "gleba"
 ];
-const planetNamesUploadTime = "";
+window.planetNamesUploadTime = "2026-08-27T19:38:18.458868+00:00";
+window.mapExchangeString = ">>>eNp1Ur2LE0EUnzGuibk7DUcQhONMYRvR01KyqyAiov/COtlM4uBmJs5H5O4KU1gqNoJooWdpk87O4kAQ7Q6t7E5stFAiiDZCnNnNbPYjPnhvf/N7b97XzgEAQQ1oWauh24qEzA+46mCfkRCAkWu1HKAwIBKnuYMBQ5mgasAGA8ybjGfiDkcZm7mMVUxxf7PZRiITvNINFeOEYn+Iqcx6VNhjHPlBSLrdtOeo9RARItoRad9SL8TtBXdqMR814eebWI6dA51NLsomJKN4AX8HSczTfIVwRvP7WAmJvElU32+bOTN1KVJDIordOpwFtzKdOCLgaJBmjgmJuCS05yOOkd9nREiVrewUGq8LFXYVJ4GPAtLxe3hTZCdwJMc4U3lZKtoTElM/N9eS4ojquQrzDlUYIKr0XLkHs5p4hswAIvqZ2oV9Anj69eNPo3vrwOj0LmhMp0Y12tdv2CiAozgaatKKM9soaFzQenGeDsLt+vjy561HLowjT3kzMJkxu23LXLHguvdf10kLzqXyQPjg+6udP2/3WvDvy58frrVvuPDMpfqPyca4pZ2OabpkzKEExXf3bVcVL89o8PSJkW9unKA6v9bw4M59fdq9WgKwUtaodkSbiGusJWEtm7TuwW4kv114NpIvFnwsdKAnPG9KrRvzzhhnXhl4ep4YPPSgd8J6j89D9P0NkO6hY07xLO9t2Tep+rlGihtOz5FjkuBKCkSb6iTmaym9772yPXnPvehfABP1C87+TOSxqeJvzYN1/Sklr23iZp+QASbJsxer43+tTiWe<<<";

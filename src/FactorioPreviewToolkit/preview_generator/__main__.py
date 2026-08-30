@@ -12,6 +12,7 @@ from typing import Sequence
 
 from pydantic import BaseModel, field_validator
 
+from src.FactorioPreviewToolkit.preview_generator.factorio_interface import preserved_mod_list
 from src.FactorioPreviewToolkit.preview_generator.preview_generation import (
     run_full_preview_generation,
 )
@@ -76,8 +77,9 @@ def main(argv: Sequence[str] | None = None) -> None:
     try:
         with log_section("🚀 Preview Generator started. Processing map string..."):
             arguments = parse_arguments(argv)
-            run_preview_setup_pipeline(arguments.factorio_path, arguments.map_string)
-            run_full_preview_generation(arguments.factorio_path)
+            with preserved_mod_list(arguments.factorio_path):
+                run_preview_setup_pipeline(arguments.factorio_path, arguments.map_string)
+                run_full_preview_generation(arguments.factorio_path, arguments.map_string)
             log.info("✅ Preview Generator completed successfully.")
     except Exception as e:
         log.exception("❌ Preview Generator failed with an exception.")

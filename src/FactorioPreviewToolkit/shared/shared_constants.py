@@ -14,6 +14,7 @@ class _Constants:
     # === Logging & Assets ===
     LOGS_DIR = BASE_PROJECT_DIR / "logs"
     BASE_ASSETS_DIR = BASE_PROJECT_DIR / "assets"
+    VIEWER_DIR = BASE_PROJECT_DIR / "viewer"
 
     # === Output Folder for Generated Previews ===
     PREVIEWS_OUTPUT_DIR = BASE_PROJECT_DIR / "previews"
@@ -39,6 +40,7 @@ class _Constants:
     PLANET_NAMES_LOCAL_VIEWER_FILEPATH = PREVIEWS_OUTPUT_DIR / PLANET_NAMES_LOCAL_FILENAME
     FACTORIO_CONFIG_FILEPATH = BASE_TEMP_DIR / "factorio_config.ini"
     FACTORIO_LOCK_FILEPATH = FACTORIO_WRITE_DATA_DIR / ".lock"
+    TOOLKIT_INSTANCE_LOCK_FILEPATH = BASE_TEMP_DIR / "toolkit-instance.lock"
 
     # === Ensure required directories exist ===
     BASE_TEMP_DIR.mkdir(parents=True, exist_ok=True)

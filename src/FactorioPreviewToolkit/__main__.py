@@ -33,14 +33,24 @@ if "--uploader-mode" in sys.argv:
 enable_tee_logging(constants.LOGS_DIR, keep_last_n=20)
 
 from src.FactorioPreviewToolkit.controller.controller import PreviewController
+from src.FactorioPreviewToolkit.shared.single_instance import (
+    AlreadyRunningError,
+    single_instance_guard,
+)
 from src.FactorioPreviewToolkit.shared.structured_logger import log
 
 if __name__ == "__main__":
     log.info("🚀 Factorio preview toolkit started.")
     controller = None
     try:
-        controller = PreviewController()
-        controller.start()
+        with single_instance_guard():
+            controller = PreviewController()
+            controller.start()
+    except AlreadyRunningError as e:
+        # Expected situation, not a crash - no stack trace.
+        log.error(f"❌ {e}")
+        show_error_popup("Factorio Toolkit already running", str(e))
+        sys.exit(1)
     except KeyboardInterrupt:
         log.info("⚠️ Interrupted by user. Shutting down...")
     except Exception as e:

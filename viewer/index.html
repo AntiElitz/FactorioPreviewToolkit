@@ -11,10 +11,15 @@
 <body>
   <div class="tab-highlight"></div>
   <div class="tabs">
+    <!-- Page through the tabs when there are more planets than fit on one row -->
+    <button id="tabPrev" class="tab-nav" title="Previous planets" aria-label="Previous planets">‹</button>
     <div class="tab-buttons">
       <!-- Tabs will be dynamically inserted here -->
     </div>
+    <button id="tabNext" class="tab-nav" title="Next planets" aria-label="Next planets">›</button>
     <div class="tab-controls">
+      <button id="copyMapString" class="control-button" title="Copy the map exchange string"
+              style="display: none;">Copy map string</button>
       <span id="zoomDisplay">Zoom: 100%</span>
       <button id="resetView" title="Reset View">↺</button>
       <a href="https://github.com/AntiElitz/FactorioPreviewToolkit"
@@ -40,9 +45,15 @@
 
   <div class="map-container" id="mapContainer">
     <img id="mapImage" class="map" alt="Map" src="" />
+    <!-- Red cross on the spawn position (map center) -->
+    <div id="spawnMarker" class="spawn-marker"></div>
   </div>
 
+  <!-- Composite view: main planet plus a scrollable column of the others -->
+  <div class="overview" id="overviewContainer"></div>
+
   <script src="viewer_config.js"></script>
+  <script src="js/overview.js"></script>
   <script src="js/mapView.js"></script>
   <script src="js/keyboard.js"></script>
   <script src="js/main.js"></script>

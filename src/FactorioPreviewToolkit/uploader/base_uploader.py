@@ -90,7 +90,62 @@ class BaseUploader(ABC):
     """
     Abstract uploader class. Uploads the planet names file and all planet preview images.
     Subclasses must implement upload_single().
+
+    Two ways to use it:
+    - upload_planet_image() / upload_planet_names_file() / write_viewer_config() are driven
+      by the generator, one planet at a time, so an audience sees each planet as soon as it
+      is rendered instead of waiting for the whole run.
+    - upload_all() uploads everything that is already on disk, for a manual re-upload.
     """
+
+    def prepare_remote(self, planet_names: list[str]) -> str:
+        """
+        Runs once before the first planet of a run.
+
+        Deletes the previews about to be replaced and publishes the full planet list, so a
+        hosted viewer immediately shows a tab per planet with a "waiting" placeholder -
+        exactly like the local viewer - instead of serving the previous map's images under
+        the new map's tabs. The images then appear one by one as they are rendered; the
+        viewer picks each one up on its own.
+
+        Returns the public URL of the planet list.
+        """
+        for planet in planet_names:
+            self.delete_remote_preview(planet)
+        return self.upload_planet_names_file()
+
+    def delete_remote_preview(self, planet: str) -> None:
+        """
+        Deletes one planet's uploaded preview. Uploaders that cannot delete do nothing,
+        which only means the old image lingers until it is overwritten.
+        """
+
+    def upload_planet_image(self, planet: str) -> str | None:
+        """
+        Optimizes, stamps and uploads one planet's preview. Returns its public URL, or
+        None if there is no image for that planet.
+        """
+        image_path = constants.PREVIEWS_OUTPUT_DIR / f"{planet}.png"
+        if not image_path.exists():
+            log.warning(f"⚠️ No preview image for {planet} - skipping upload.")
+            return None
+
+        with log_section(f"🌍 Uploading {planet} preview..."):
+            try:
+                _optimize_png(image_path)
+                _add_upload_timestamp_to_png(image_path)
+                url = self.upload_single(image_path, f"{planet}.png")
+                log.info(f"✅ {planet} uploaded.")
+                return url
+            except Exception:
+                log.error(f"❌ Failed to upload {planet}.png")
+                raise
+
+    def write_viewer_config(self, planet_image_links: dict[str, str], names_link: str) -> None:
+        """
+        Writes the config file that a hosted viewer needs, with the public links.
+        """
+        _write_viewer_config_js(planet_image_links, names_link)
 
     def upload_all(self) -> None:
         """
@@ -99,12 +154,12 @@ class BaseUploader(ABC):
         """
         with log_section("🚀 Uploading preview assets..."):
             planet_names = _load_planet_names()
-            planet_names_link = self._upload_planet_names_file()
+            planet_names_link = self.upload_planet_names_file()
             planet_image_links = self._upload_planet_images(planet_names)
             _write_viewer_config_js(planet_image_links, planet_names_link)
             log.info("✅ All assets uploaded successfully.")
 
-    def _upload_planet_names_file(self) -> str:
+    def upload_planet_names_file(self) -> str:
         """
         Uploads the planet names JS file and returns its public URL.
         """
@@ -130,17 +185,9 @@ class BaseUploader(ABC):
         """
         links: dict[str, str] = {}
         for planet in planet_names:
-            with log_section(f"🌍 Uploading {planet} preview..."):
-                image_path = constants.PREVIEWS_OUTPUT_DIR / f"{planet}.png"
-                try:
-                    _optimize_png(image_path)
-                    _add_upload_timestamp_to_png(image_path)
-                    url = self.upload_single(image_path, f"{planet}.png")
-                    links[planet] = url
-                    log.info(f"✅ {planet} uploaded.")
-                except Exception:
-                    log.error(f"❌ Failed to upload {planet}.png")
-                    raise
+            url = self.upload_planet_image(planet)
+            if url is not None:
+                links[planet] = url
         return links
 
     @abstractmethod

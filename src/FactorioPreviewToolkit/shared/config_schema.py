@@ -47,6 +47,9 @@ class Settings(BaseModel):
     fixed_path_factorio_executable: Path = Path("not-used")
     factorio_locator_poll_interval_in_seconds: float = 2
 
+    # === Mods ===
+    factorio_mod_directory: str = "auto"
+
     # === Map Exchange Input ===
     map_exchange_input_method: Literal["clipboard_monitor", "file_monitor"]
     file_monitor_filepath: Path = Path("not-used")
@@ -54,6 +57,8 @@ class Settings(BaseModel):
 
     # === Preview Generation ===
     map_preview_size: int
+    planets: str = "all"
+    use_factorio_prototype_cache: bool = False
 
     # === Sound Settings ===
     sound_start_filepath: Path
@@ -64,11 +69,21 @@ class Settings(BaseModel):
     failure_sound_volume: float
 
     # === Upload Settings ===
-    upload_method: Literal["rclone", "local_sync", "skip"]
+    upload_method: Literal["rclone", "ftp", "local_sync", "skip"]
     rclone_remote_service: str = ""
     rclone_remote_upload_dir: Path = Path("not-used")
     rclone_executable: Path = Path("not-used")
     local_sync_target_dir: Path = Path("not-used")
+
+    # === FTP Upload ===
+    ftp_host: str = ""
+    ftp_port: int = 21
+    ftp_user: str = ""
+    ftp_password: str = ""
+    ftp_remote_dir: str = ""
+    ftp_public_base_url: str = ""
+    ftp_use_tls: bool = True
+    ftp_upload_viewer: bool = True
 
     class Config:
         frozen = True
@@ -189,6 +204,45 @@ class Settings(BaseModel):
             raise ValueError(f"'map_preview_size' must be a positive integer. You entered: {v}")
         return v
 
+    @model_validator(mode="after")
+    def validate_ftp_setup(values: Self, info: ValidationInfo) -> Self:
+        """
+        Ensures the FTP settings that have no sensible default are actually filled in.
+        The public base URL matters as much as the credentials: without it the viewer
+        would be handed unusable links.
+        """
+        if values.upload_method != "ftp":
+            return values
+
+        missing = [
+            name
+            for name in ("ftp_host", "ftp_user", "ftp_public_base_url")
+            if not str(getattr(values, name)).strip()
+        ]
+        if missing:
+            raise ValueError(
+                f"Using 'upload_method = ftp' requires these settings: {', '.join(missing)}."
+            )
+
+        if not values.ftp_public_base_url.strip().lower().startswith(("http://", "https://")):
+            raise ValueError(
+                f"'ftp_public_base_url' must be the http(s) address where the uploaded files "
+                f"are reachable, for example https://example.com/factorio-previews\n"
+                f"You entered: {values.ftp_public_base_url}"
+            )
+        return values
+
+    @field_validator("planets")
+    def planets_must_not_be_empty(cls, v: str) -> str:
+        """
+        Ensures the planet selection is not blank - use 'all' to generate everything.
+        """
+        if not [token for token in v.split(",") if token.strip()]:
+            raise ValueError(
+                "'planets' must not be empty. Use 'all', 'vanilla' or a list of planet names."
+            )
+        return v
+
     @field_validator("start_sound_volume", "success_sound_volume", "failure_sound_volume")
     def volumes_between_0_and_1(cls, v: float, info: FieldValidationInfo) -> float:
         """
@@ -301,6 +355,23 @@ class Settings(BaseModel):
                 f"Check your 'fixed_path_factorio_executable' setting."
             )
         return v
+
+    @field_validator("factorio_mod_directory")
+    def check_factorio_mod_directory(cls, v: str) -> str:
+        """
+        Accepts 'auto', 'none' or a path to an existing mods folder (the one with mod-list.json).
+        """
+        value = v.strip()
+        if value.lower() in ("auto", "none", ""):
+            return value
+
+        path = resolve_relative_to_project_root(value)
+        if not path.is_dir():
+            raise ValueError(
+                f"'factorio_mod_directory' must be 'auto', 'none' or an existing folder.\n"
+                f"This folder does not exist: {path}"
+            )
+        return str(path)
 
     @field_validator("local_sync_target_dir")
     def check_local_sync_target_dir(cls, v: Path, info: FieldValidationInfo) -> Path:
